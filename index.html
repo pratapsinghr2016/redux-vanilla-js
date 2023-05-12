@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redux Vnilla JS example</title>
+  </head>
+  <body>
+    <p id="value"></p>
+    <button id="increase">+</button>
+    <button id="decrease">-</button>
+    <button id="increaseBy">+ 5</button>
+    <button id="async">Async</button>
+  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.2.1/redux.min.js"></script>
+  <script>
+    const value = document.getElementById("value");
+    // redux implementation
+    const reducer = (state = null, action) => {
+      console.log(action);
+      if (state === null) {
+        return 0;
+      }
+      switch (action.type) {
+        case "INC":
+          return (state = state + 1);
+        case "DSC":
+          return (state -= 1);
+        case "INC5":
+          return (state += action.payload.value);
+        case "ASYNC":
+          return (state += 1);
+        default:
+          return state;
+      }
+    };
+
+    const store = Redux.createStore(reducer);
+
+    function render() {
+      console.log(store.getState());
+      value.innerHTML = store.getState().toString();
+    }
+
+    render();
+    store.subscribe(render);
+
+    document.getElementById("increase").addEventListener("click", () => {
+      store.dispatch({ type: "INC" });
+    });
+
+    document.getElementById("decrease").addEventListener("click", () => {
+      store.dispatch({ type: "DSC" });
+    });
+
+    document.getElementById("increaseBy").addEventListener("click", () => {
+      store.dispatch({ type: "INC5", payload: { value: 5 } });
+    });
+
+    document.getElementById("async").addEventListener("click", () => {
+      setTimeout(() => {
+        store.dispatch({ type: "ASYNC" });
+      }, 1000);
+    });
+  </script>
+</html>
